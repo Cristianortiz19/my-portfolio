@@ -1,0 +1,263 @@
+---
+// Sección de skills como "stickers" alrededor de un titular (ref. For Purpose Co.).
+// Los stickers aparecen con rebote al hacer scroll y se pueden arrastrar.
+import Deco from './Deco.astro';
+import LogoMark from './LogoMark.astro';
+import { ui, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang].stickers;
+
+type Shape = 'pill' | 'circle' | 'rounded' | 'burst';
+type Tone = 'orange' | 'blue' | 'bone' | 'sky' | 'coal';
+interface Sticker {
+  text?: string;
+  small?: string; // línea pequeña encima
+  icon?: 'globe' | 'asterisk' | 'logo' | 'planet';
+  shape: Shape;
+  tone: Tone;
+  x: number; // % horizontal (centro)
+  y: number; // % vertical (centro)
+  r: number; // rotación
+  size?: number; // escala relativa
+  desktopOnly?: boolean;
+}
+
+const stickers: Sticker[] = [
+  { text: 'Product Design', shape: 'pill', tone: 'orange', x: 17, y: 20, r: -9 },
+  { text: 'Figma', shape: 'circle', tone: 'bone', x: 32, y: 9, r: 8 },
+  { icon: 'globe', shape: 'circle', tone: 'blue', x: 46, y: 7, r: 0, size: 0.8 },
+  { text: 'Design Systems', shape: 'burst', tone: 'sky', x: 62, y: 11, r: -6 },
+  { text: 'Prototyping', small: 'Rapid', shape: 'rounded', tone: 'bone', x: 79, y: 19, r: 7 },
+  { text: 'UI Design', shape: 'circle', tone: 'orange', x: 88, y: 41, r: -10 },
+  { text: 'User Flows', shape: 'pill', tone: 'blue', x: 9, y: 45, r: 6 },
+  { icon: 'asterisk', shape: 'burst', tone: 'orange', x: 12, y: 74, r: 14, size: 0.85 },
+  { text: 'Interaction', small: 'Design', shape: 'rounded', tone: 'sky', x: 29, y: 85, r: -7 },
+  { text: 'Wireframes', shape: 'pill', tone: 'coal', x: 47, y: 92, r: 3 },
+  { text: 'A11Y', small: 'Accessibility', shape: 'circle', tone: 'bone', x: 63, y: 85, r: 9 },
+  { text: 'Front-end', shape: 'pill', tone: 'orange', x: 79, y: 77, r: -5 },
+  { icon: 'logo', shape: 'circle', tone: 'coal', x: 92, y: 66, r: 0, size: 0.75, desktopOnly: true },
+  { text: 'Storybook', shape: 'rounded', tone: 'blue', x: 6, y: 32, r: -4, desktopOnly: true },
+  { text: '4+ Years', small: 'Since 2021', shape: 'burst', tone: 'bone', x: 95, y: 15, r: 10, size: 0.9, desktopOnly: true },
+];
+
+// Estrella "festoneada" para los stickers tipo insignia
+const burst = (() => {
+  const pts: string[] = [];
+  const n = 14;
+  for (let i = 0; i < n * 2; i++) {
+    const ang = (Math.PI * i) / n - Math.PI / 2;
+    const rad = i % 2 === 0 ? 46 : 39.5;
+    pts.push(`${(50 + rad * Math.cos(ang)).toFixed(2)},${(50 + rad * Math.sin(ang)).toFixed(2)}`);
+  }
+  return pts.join(' ');
+})();
+---
+
+<section id="skills" class="relative overflow-hidden py-24 md:py-32" aria-labelledby="skills-title">
+  <div class="wrap">
+    <p data-reveal class="mono-label flex items-center justify-center gap-3 text-muted">
+      <span class="flex items-center gap-1.5 text-bone"><span class="block h-2.5 w-2.5 bg-orange"></span><span class="block h-2.5 w-2.5 bg-blue"></span><span class="ml-1">01</span></span>
+      <span class="h-px w-8 bg-line"></span>
+      {t.label}
+    </p>
+  </div>
+
+  <div class="stickers-board relative mx-auto mt-6 h-[34rem] max-w-[1200px] md:h-[40rem] lg:h-[44rem]">
+    <!-- Titular -->
+    <h2 id="skills-title" class="pointer-events-none absolute inset-0 z-10 grid place-items-center text-center">
+      <span class="display text-[clamp(3.2rem,10vw,9.5rem)] leading-[0.9]">
+        <span class="block">{t.title[0]}</span>
+        <span class="block">{t.title[1].replace('.', '')}<span class="text-orange">.</span></span>
+      </span>
+    </h2>
+
+    <!-- Stickers -->
+    <ul class="absolute inset-0 z-20" aria-label={t.label}>
+      {
+        stickers.map((s) => (
+          <li
+            data-sticker
+            data-r={s.r}
+            class:list={['sticker', `sticker--${s.shape}`, `tone--${s.tone}`, s.desktopOnly && 'sticker--desk']}
+            style={`--x:${s.x};top:${s.y}%;rotate:${s.r}deg;--k:${s.size ?? 1}`}
+          >
+            {s.shape === 'burst' && (
+              <svg class="sticker-burst" viewBox="0 0 100 100" aria-hidden="true">
+                <polygon points={burst} />
+              </svg>
+            )}
+            <span class="sticker-content">
+              {s.small && <span class="sticker-small">{s.small}</span>}
+              {s.text && <span class="sticker-text">{s.text}</span>}
+              {s.icon === 'globe' && <Deco name="globe" class="w-[3.2em]" />}
+              {s.icon === 'asterisk' && <Deco name="asterisk" class="w-[3em]" />}
+              {s.icon === 'logo' && <LogoMark class="w-[4.2em] text-orange" />}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <p data-reveal class="mono-label mt-2 hidden items-center justify-center gap-2 text-muted md:flex">
+    <span aria-hidden="true">✦</span>{t.hint}<span aria-hidden="true">✦</span>
+  </p>
+</section>
+
+<style>
+  .stickers-board {
+    font-size: clamp(0.55rem, 1.05vw, 1rem);
+  }
+
+  .sticker {
+    position: absolute;
+    left: calc(var(--x) * 1%);
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    font-size: calc(1em * var(--k));
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    filter: drop-shadow(0 0.35em 0 rgb(0 0 0 / 0.35));
+    transition: scale 0.4s var(--ease-expo);
+  }
+  .sticker:hover {
+    scale: 1.07;
+  }
+  .sticker:active {
+    cursor: grabbing;
+  }
+
+  .sticker-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    line-height: 0.95;
+  }
+  .sticker-text {
+    font-weight: 800;
+    font-size: 1.35em;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  .sticker-small {
+    font-family: var(--font-mono);
+    font-size: 0.62em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.35em;
+    opacity: 0.85;
+  }
+
+  .sticker--pill .sticker-text,
+  .sticker--rounded .sticker-text {
+    white-space: nowrap;
+  }
+
+  /* Formas */
+  .sticker--pill {
+    padding: 0.85em 1.4em;
+    border-radius: 999px;
+  }
+  .sticker--rounded {
+    padding: 1em 1.3em;
+    border-radius: 0.9em;
+  }
+  .sticker--circle {
+    width: 8.5em;
+    height: 8.5em;
+    border-radius: 999px;
+    padding: 0.8em;
+  }
+  .sticker--burst {
+    width: 10em;
+    height: 10em;
+    background: transparent !important;
+    padding: 1.6em;
+  }
+  .sticker-burst {
+    overflow: visible;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    stroke-linejoin: round;
+    stroke-width: 6;
+  }
+
+  /* Tonos de marca */
+  .tone--orange {
+    background: var(--color-orange);
+    color: var(--color-ink);
+  }
+  .tone--blue {
+    background: var(--color-blue);
+    color: var(--color-bone);
+  }
+  .tone--sky {
+    background: var(--color-blue-light);
+    color: var(--color-ink);
+  }
+  .tone--bone {
+    background: var(--color-bone);
+    color: var(--color-ink);
+  }
+  .tone--coal {
+    background: var(--color-coal);
+    color: var(--color-bone);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.15);
+  }
+  .tone--orange .sticker-burst {
+    fill: var(--color-orange);
+    stroke: var(--color-orange);
+  }
+  .tone--sky .sticker-burst {
+    fill: var(--color-blue-light);
+    stroke: var(--color-blue-light);
+  }
+  .tone--bone .sticker-burst {
+    fill: var(--color-bone);
+    stroke: var(--color-bone);
+  }
+  .tone--blue .sticker-burst {
+    fill: var(--color-blue);
+    stroke: var(--color-blue);
+  }
+
+  /* Móvil: titular arriba y los stickers como una nube que se puede arrastrar */
+  @media (width < 48rem) {
+    .stickers-board {
+      height: auto;
+      font-size: 0.62rem;
+      padding-inline: 1rem;
+    }
+    .stickers-board h2 {
+      position: relative;
+      margin-bottom: 2.5rem;
+    }
+    .stickers-board ul {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.9rem 0.6rem;
+    }
+    .sticker {
+      position: relative;
+      left: auto;
+      top: auto !important;
+      translate: none;
+    }
+    .sticker--desk {
+      display: none;
+    }
+  }
+</style>

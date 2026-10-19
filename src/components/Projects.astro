@@ -1,0 +1,91 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import ProjectCard from './ProjectCard.astro';
+import ProjectVisual from './ProjectVisual.astro';
+import { featuredProjects, projects, kindLabel } from '../data/projects';
+import { ui, localePath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang].work;
+
+// Posiciones de las piezas flotantes alrededor de "Featured work"
+const floating = [
+  { p: projects[0], cls: 'top-[4%] left-[2%] w-[27%] rotate-[-4deg]', speed: 0.5 },
+  { p: projects[1], cls: 'top-[0%] right-[5%] w-[24%] rotate-[3deg]', speed: 1.1 },
+  { p: projects[2], cls: 'bottom-[4%] left-[10%] w-[22%] rotate-[5deg]', speed: 1.4 },
+  { p: projects[3], cls: 'bottom-[8%] right-[2%] w-[28%] rotate-[-3deg]', speed: 0.8 },
+];
+---
+
+<section id="work" class="relative py-24 md:py-32">
+  <!-- Intro: "Featured work" con imágenes en parallax -->
+  <div class="relative mx-auto h-[60vh] max-w-[1600px] md:h-[110vh]">
+    {
+      floating.map((f) => (
+        <div class={`absolute hidden md:block ${f.cls}`} data-speed={f.speed} aria-hidden="true">
+          <div class="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-line shadow-2xl shadow-black/50">
+            <div class="absolute top-0 left-0 h-[200%] w-[200%] origin-top-left scale-50">
+              <div class="relative h-full w-full">
+                <ProjectVisual project={f.p} label={kindLabel[f.p.kind][lang]} />
+              </div>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+      <SectionLabel index="04" label={t.label} />
+      <h2 class="mt-6 display text-[clamp(3.5rem,12vw,11.5rem)]">
+        <span class="hero-line block overflow-hidden" data-line-reveal><span class="block">{t.featured[0]}</span></span>
+        <span class="hero-line block overflow-hidden" data-line-reveal
+          ><span class="block font-serif font-normal tracking-[-0.03em] text-orange italic">{t.featured[1]}</span></span
+        >
+      </h2>
+      <p data-reveal class="mono-label mt-6 text-muted">{t.scroll}</p>
+    </div>
+  </div>
+
+  <!-- Grid de proyectos -->
+  <div class="wrap mt-16 md:mt-24">
+    <div class="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-8">
+      <h3 class="display text-[clamp(3.25rem,9vw,8rem)]" data-split>
+        {t.title}<sup class="ml-2 align-super font-mono text-[0.18em] font-normal tracking-normal text-muted">
+          ({String(projects.length).padStart(2, '0')})
+        </sup>
+      </h3>
+      <a href={localePath(lang, '/projects')} class="btn btn-ghost mb-2">
+        {t.all}
+        <span class="btn-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"
+            ><path d="M1 7h12m0 0L8 2m5 5-5 5" stroke="currentColor" stroke-width="1.6"></path></svg
+          >
+        </span>
+      </a>
+    </div>
+
+    <div class="mt-12 grid gap-x-6 gap-y-16 md:grid-cols-2 md:gap-y-24">
+      {
+        featuredProjects.map((p, i) => (
+          <div class:list={[i % 2 === 1 && 'md:mt-32']}>
+            <ProjectCard project={p} lang={lang} index={projects.indexOf(p)} />
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-20 flex justify-center">
+      <a href={localePath(lang, '/projects')} class="btn btn-primary">
+        {t.all} ({String(projects.length).padStart(2, '0')})
+        <span class="btn-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"
+            ><path d="M1 7h12m0 0L8 2m5 5-5 5" stroke="currentColor" stroke-width="1.6"></path></svg
+          >
+        </span>
+      </a>
+    </div>
+  </div>
+</section>

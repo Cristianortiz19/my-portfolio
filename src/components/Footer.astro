@@ -1,0 +1,55 @@
+---
+import LogoMark from './LogoMark.astro';
+import { ui, contact, localePath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const home = localePath(lang, '/');
+const year = new Date().getFullYear();
+---
+
+<footer class="relative mt-24 overflow-hidden border-t border-line pt-16">
+  <div class="wrap grid gap-10 md:grid-cols-12">
+    <div class="md:col-span-5">
+      <a href={home} class="flex items-center gap-3">
+        <LogoMark class="h-7 w-auto text-orange" />
+        <span class="text-xl font-bold tracking-tight">Cristian Ortiz</span>
+      </a>
+      <p class="mt-4 max-w-xs text-sm text-muted">{t.footer.built}</p>
+    </div>
+    <nav aria-label="Footer" class="grid grid-cols-2 gap-8 text-sm md:col-span-7 md:grid-cols-3">
+      <ul class="space-y-2">
+        <li><a class="link-underline text-bone/70 hover:text-bone" href={`${home}#work`}>{t.nav.work}</a></li>
+        <li><a class="link-underline text-bone/70 hover:text-bone" href={`${home}#about`}>{t.nav.about}</a></li>
+        <li><a class="link-underline text-bone/70 hover:text-bone" href={`${home}#services`}>{t.nav.services}</a></li>
+        <li><a class="link-underline text-bone/70 hover:text-bone" href={`${home}#contact`}>{t.nav.contact}</a></li>
+      </ul>
+      <ul class="space-y-2">
+        <li><a class="link-underline text-bone/70 hover:text-bone" href={contact.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a></li>
+        <li><a class="link-underline text-bone/70 hover:text-bone" href={contact.behance} target="_blank" rel="noopener">Behance ↗</a></li>
+        <li><a class="link-underline text-bone/70 hover:text-bone" href={`mailto:${contact.email}`}>Email ↗</a></li>
+      </ul>
+      <div class="col-span-2 md:col-span-1 md:text-right">
+        <a href="#" class="mono-label inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 hover:border-orange hover:text-orange">
+          ↑ {t.footer.top}
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="wrap mt-14 flex flex-col justify-between gap-2 border-t border-line py-6 mono-label text-muted md:flex-row">
+    <span>© {year} Cristian Ortiz. {t.footer.rights}</span>
+    <span>Cali, Colombia — 3.4516° N, 76.5320° W</span>
+  </div>
+
+  <!-- Firma tipográfica gigante (al final; con espacio inferior para el blur fijo) -->
+  <p
+    aria-hidden="true"
+    class="display pb-[0.12em] text-center text-[clamp(3.2rem,13.5vw,14rem)] leading-[0.85] whitespace-nowrap text-bone select-none"
+  >
+    Cristian <span class="font-serif font-normal tracking-[-0.05em] text-orange italic">Ortiz</span>
+  </p>
+</footer>

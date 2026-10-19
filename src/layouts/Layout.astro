@@ -1,23 +1,84 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { ui, localePath, type Lang } from '../i18n/ui';
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Ruta sin prefijo de idioma (ej. "/" o "/projects"), usada para el selector EN/ES */
+  path: string;
+}
+
+const { lang, title, description, path } = Astro.props;
+const t = ui[lang];
+const site = Astro.site ?? new URL(Astro.url.origin);
+const canonical = new URL(localePath(lang, path), site);
+const altEn = new URL(localePath('en', path), site);
+const altEs = new URL(localePath('es', path), site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0c0c0c" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={altEn} />
+    <link rel="alternate" hreflang="es" href={altEs} />
+    <link rel="alternate" hreflang="x-default" href={altEn} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_CO' : 'en_US'} />
+
+    <!-- Tipografías: Rethink Sans (marca), DM Serif Display (acentos serif), Doto (dot-matrix), JetBrains Mono (etiquetas) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap"
+    />
+
+    <!-- Marca el documento para las animaciones (y respeta "reducir movimiento") -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('reduce');
+        // Si por algún motivo GSAP no carga, mostramos todo igualmente
+        setTimeout(function () {
+          if (!window.__motionReady) d.classList.add('reduce');
+        }, 3500);
+      })();
+    </script>
+  </head>
+  <body class="min-h-svh">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-orange focus:px-4 focus:py-2 focus:text-ink"
+      >{t.nav.skip}</a
+    >
+    <div class="bg-grid" aria-hidden="true"></div>
+    <Header lang={lang} path={path} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <!-- Blur progresivo fijo en la parte inferior de la pantalla -->
+    <div class="progressive-blur" aria-hidden="true"><div></div><div></div><div></div><div></div></div>
+
+    <script>
+      import '../scripts/motion.ts';
+    </script>
+  </body>
+</html>

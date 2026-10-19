@@ -1,0 +1,338 @@
+@import "tailwindcss";
+
+/* ───────────────────────── Design tokens (marca personal) ───────────────────────── */
+@theme {
+  --color-ink: #0c0c0c;        /* fondo principal */
+  --color-coal: #262626;       /* carbón de marca: superficies */
+  --color-coal-2: #171717;     /* superficie intermedia */
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-bone: #f4f1ec;       /* texto principal */
+  --color-muted: #9a9a9a;      /* texto secundario */
+  --color-orange: #fd621f;     /* acento principal de marca */
+  --color-blue: #2857c9;       /* acento secundario de marca */
+  --color-blue-light: #7397ee; /* azul legible sobre fondo oscuro */
+
+  --font-sans: "Rethink Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "DM Serif Display", ui-serif, Georgia, serif; /* acentos en serif itálica */
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+@layer base {
+  html {
+    background: var(--color-ink);
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-orange);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-orange);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+}
+
+/* ───────────────────────── Utilities ───────────────────────── */
+@utility wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+  @media (width >= 80rem) {
+    padding-inline: 3rem;
+  }
+}
+
+/* Texto con contorno (juego tipográfico) */
+@utility text-outline {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.5px currentColor;
+  @media (width >= 64rem) {
+    -webkit-text-stroke-width: 2px;
+  }
+}
+
+/* Etiquetas monoespaciadas tipo "// Based in Cali" */
+@utility mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* Titulares grandes */
+@utility display {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.88;
+}
+
+/* ───────────────────────── Components ───────────────────────── */
+@layer components {
+  /* Grid de fondo global, sutil y desvanecido */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, #000 30%, transparent 100%);
+  }
+
+  /* Grid local (cards, placeholders) */
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Ruido fino para dar textura */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.32rem 0.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    color: rgb(244 241 236 / 0.82);
+    background: rgb(255 255 255 / 0.02);
+    white-space: nowrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 0.4rem 0.4rem 1.25rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition: background-color 0.4s var(--ease-expo), color 0.4s var(--ease-expo), transform 0.4s var(--ease-expo);
+  }
+  .btn .btn-icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    transition: transform 0.5s var(--ease-expo);
+  }
+  .btn:hover .btn-icon {
+    transform: rotate(-45deg);
+  }
+  .btn-primary {
+    background: var(--color-orange);
+    color: var(--color-ink);
+  }
+  .btn-primary .btn-icon {
+    background: var(--color-ink);
+    color: var(--color-orange);
+  }
+  .btn-primary:hover {
+    background: var(--color-bone);
+  }
+  .btn-ghost {
+    border: 1px solid var(--color-line);
+    color: var(--color-bone);
+  }
+  .btn-ghost .btn-icon {
+    background: rgb(255 255 255 / 0.08);
+  }
+  .btn-ghost:hover {
+    background: var(--color-bone);
+    color: var(--color-ink);
+  }
+  .btn-ghost:hover .btn-icon {
+    background: var(--color-ink);
+    color: var(--color-bone);
+  }
+
+  /* Subrayado animado para links */
+  .link-underline {
+    background: linear-gradient(currentColor, currentColor) no-repeat 100% 100% / 0 1px;
+    transition: background-size 0.5s var(--ease-expo);
+  }
+  .link-underline:hover {
+    background-position: 0 100%;
+    background-size: 100% 1px;
+  }
+
+  /* Toggle del hero (la "O" de PRODUCT) */
+  .hero-toggle {
+    position: relative;
+    display: inline-block;
+    width: 1.42em;
+    height: 0.74em;
+    margin-inline: 0.04em;
+    border-radius: 999px;
+    background: var(--color-coal);
+    box-shadow: inset 0 0 0 0.035em rgb(255 255 255 / 0.12), inset 0 -0.06em 0.12em rgb(0 0 0 / 0.5);
+    vertical-align: -0.01em;
+    cursor: pointer;
+    transition: background-color 0.7s var(--ease-expo);
+  }
+  .hero-toggle .knob {
+    position: absolute;
+    top: 0.06em;
+    left: 0.06em;
+    width: 0.62em;
+    height: 0.62em;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--color-bone);
+    box-shadow: 0 0.05em 0.12em rgb(0 0 0 / 0.45);
+    transition: transform 0.7s var(--ease-expo);
+  }
+  .hero-toggle.is-on {
+    background: var(--color-orange);
+  }
+  .hero-toggle.is-on .knob {
+    transform: translateX(0.68em);
+  }
+
+  /* Marquee infinito (clientes) */
+  .marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 40s linear infinite;
+  }
+  .marquee-wrap:hover .marquee {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Disponibilidad: punto con pulso */
+  .pulse-dot {
+    position: relative;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--color-orange);
+  }
+  .pulse-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    animation: pulse 2s var(--ease-expo) infinite;
+  }
+  @keyframes pulse {
+    to {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+}
+
+/* ───────────────────────── Blur progresivo inferior (fijo al hacer scroll) ───────────────────────── */
+.progressive-blur {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  height: clamp(4.5rem, 11vh, 8rem);
+  pointer-events: none;
+}
+.progressive-blur > div {
+  position: absolute;
+  inset: 0;
+}
+.progressive-blur > div:nth-child(1) {
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 25%, #000 50%, transparent 75%);
+}
+.progressive-blur > div:nth-child(2) {
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  mask-image: linear-gradient(to bottom, transparent 25%, #000 50%, #000 75%, transparent 100%);
+}
+.progressive-blur > div:nth-child(3) {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  mask-image: linear-gradient(to bottom, transparent 50%, #000 75%, #000 100%);
+}
+.progressive-blur > div:nth-child(4) {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  mask-image: linear-gradient(to bottom, transparent 70%, #000 100%);
+}
+.progressive-blur::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgb(12 12 12 / 0.6));
+}
+
+/* ───────────────────────── Máscaras de líneas (evita que se corten descendentes: f, g, j, p, y) ─────────────────────────
+   El padding inferior queda dentro del área recortada; el margen negativo compensa el espacio para no mover el layout. */
+.hero-line,
+[data-split] > div,
+[data-hero-split] > div {
+  padding-bottom: 0.22em !important; /* !important: GSAP/SplitText pone estilos inline en el wrapper */
+  margin-bottom: -0.22em !important;
+}
+
+/* ───────────────────────── Estados iniciales para animaciones ─────────────────────────
+   Solo se ocultan si JS está activo y el usuario no pidió reducir movimiento.
+   GSAP se encarga de mostrarlos. */
+html.js:not(.reduce) [data-reveal],
+html.js:not(.reduce) [data-split],
+html.js:not(.reduce) .hero-line > span,
+html.js:not(.reduce) [data-hero-fade],
+html.js:not(.reduce) [data-block],
+html.js:not(.reduce) [data-hero-split] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee,
+  .pulse-dot::after {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

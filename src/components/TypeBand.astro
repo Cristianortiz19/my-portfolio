@@ -1,0 +1,38 @@
+---
+// Banda tipográfica que se desplaza horizontalmente con el scroll (GSAP)
+import LogoMark from './LogoMark.astro';
+
+const rows = [
+  { words: ['Product Design', 'UX Research', 'Prototyping'], style: 'sans', dir: -1 },
+  { words: ['Design Systems', 'Interactions', 'Components'], style: 'serif', dir: 1 },
+  { words: ['Front-end', 'Astro', 'React', 'Next.js'], style: 'outline', dir: -1 },
+  { words: ['UI Design', 'Motion', 'Branding', '3D & AR'], style: 'blue', dir: 1 },
+];
+const styles: Record<string, string> = {
+  sans: 'font-bold uppercase tracking-[-0.045em] text-bone',
+  serif: 'font-serif italic tracking-[-0.02em] text-orange',
+  outline: 'font-bold uppercase tracking-[-0.045em] text-outline text-bone',
+  blue: 'font-bold uppercase tracking-[-0.045em] text-blue-light',
+};
+---
+
+<section aria-hidden="true" class="type-band relative overflow-hidden py-16 md:py-28">
+  <div class="flex flex-col gap-1 md:gap-2">
+    {
+      rows.map((row) => (
+        <div class="band-row whitespace-nowrap" data-dir={row.dir}>
+          <div class:list={['band-track inline-flex items-center leading-[0.95] text-[clamp(3rem,11vw,10rem)]', styles[row.style]]}>
+            {[0, 1, 2].map(() =>
+              row.words.map((w) => (
+                <>
+                  <span class="px-[0.18em]">{w}</span>
+                  <LogoMark class="h-[0.32em] w-auto shrink-0 text-bone/25" />
+                </>
+              )),
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

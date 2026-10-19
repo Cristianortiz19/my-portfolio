@@ -1,0 +1,51 @@
+---
+// Íconos decorativos de línea (planeta, globo, asterisco, franjas)
+interface Props {
+  name: 'planet' | 'globe' | 'asterisk' | 'stripes';
+  class?: string;
+}
+const { name, class: className = '' } = Astro.props;
+---
+
+{
+  name === 'planet' && (
+    <svg viewBox="0 0 120 80" fill="none" stroke="currentColor" stroke-width="2.2" class={className} aria-hidden="true">
+      <circle cx="60" cy="40" r="27" />
+      <ellipse cx="60" cy="40" rx="11" ry="27" />
+      <ellipse cx="60" cy="40" rx="21" ry="27" />
+      <path d="M60 13v54" />
+      <path d="M36 27c3 0 46-1 48 0M33 40h54M36 53c3 1 45 1 48 0" />
+      <ellipse cx="60" cy="40" rx="58" ry="17" transform="rotate(-16 60 40)" stroke-width="3" />
+    </svg>
+  )
+}
+
+{
+  name === 'globe' && (
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.2" class={className} aria-hidden="true">
+      <circle cx="24" cy="24" r="20" />
+      <ellipse cx="24" cy="24" rx="9" ry="20" />
+      <path d="M4 24h40M7 14h34M7 34h34" />
+    </svg>
+  )
+}
+
+{
+  name === 'asterisk' && (
+    <svg viewBox="0 0 100 100" fill="currentColor" class={className} aria-hidden="true">
+      <rect x="43" y="4" width="14" height="92" />
+      <rect x="43" y="4" width="14" height="92" transform="rotate(60 50 50)" />
+      <rect x="43" y="4" width="14" height="92" transform="rotate(-60 50 50)" />
+    </svg>
+  )
+}
+
+{
+  name === 'stripes' && (
+    <svg viewBox="0 0 222 66" fill="none" stroke="currentColor" stroke-width="1.6" class={className} aria-hidden="true">
+      <path d="M2 2h30c0 34 22 62 62 62H64C27 64 2 36 2 2Z" />
+      <path d="M58 2h30c0 34 22 62 62 62h-30C83 64 58 36 58 2Z" />
+      <path d="M152 2h12c31 0 56 28 56 62h-68V2Z" />
+    </svg>
+  )
+}

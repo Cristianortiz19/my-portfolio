@@ -1,0 +1,31 @@
+---
+import { clients } from '../data/content';
+import { ui, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const list = [...clients, ...clients];
+---
+
+<section aria-label={ui[lang].clients} class="border-y border-line py-6 md:py-8">
+  <div class="wrap mb-4 flex items-center gap-3">
+    <span class="h-1.5 w-1.5 rounded-full bg-orange"></span>
+    <p class="mono-label text-muted">{ui[lang].clients}</p>
+  </div>
+  <div class="marquee-wrap overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]">
+    <ul class="marquee items-center">
+      {
+        list.map((c, i) => (
+          <li class="flex items-center" aria-hidden={i >= clients.length ? 'true' : undefined}>
+            <span class="px-6 text-2xl font-semibold tracking-tight whitespace-nowrap text-bone/45 transition-colors hover:text-bone md:px-10 md:text-4xl">
+              {c}
+            </span>
+            <span aria-hidden="true" class="h-1.5 w-1.5 shrink-0 rounded-full bg-orange md:h-2 md:w-2" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

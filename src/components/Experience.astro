@@ -1,0 +1,80 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import { experience, education } from '../data/content';
+import { ui, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang].experience;
+---
+
+<section id="experience" class="wrap py-24 md:py-32">
+  <div class="grid gap-12 md:grid-cols-12 md:gap-8">
+    <div class="md:col-span-4">
+      <div class="md:sticky md:top-28">
+        <SectionLabel index="03" label={t.label} />
+        <h2 data-split class="mt-8 display text-[clamp(2.75rem,5.5vw,5rem)]">
+          {t.title}
+        </h2>
+
+        <div class="mt-12 hidden md:block">
+          <p data-reveal class="mono-label mb-4 text-muted">{t.education}</p>
+          <ul class="space-y-4">
+            {
+              education.map((e) => (
+                <li data-reveal class="border-l-2 border-blue pl-4">
+                  <p class="font-semibold">{e.title[lang]}</p>
+                  <p class="text-sm text-muted">
+                    {e.school} · {e.years}
+                  </p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <ol class="border-t border-line md:col-span-8">
+      {
+        experience.map((x) => (
+          <li data-reveal class="group relative border-b border-line py-8 md:py-10">
+            <span class="absolute top-0 left-0 h-px w-0 bg-orange transition-all duration-700 ease-expo group-hover:w-full" />
+            <div class="grid gap-3 md:grid-cols-8 md:gap-6">
+              <p class="mono-label pt-1.5 text-muted md:col-span-2">
+                {x.start} — {x.end ?? t.present}
+              </p>
+              <div class="md:col-span-6">
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h3 class="text-2xl font-semibold tracking-tight md:text-3xl">{x.company}</h3>
+                  <span class="mono-label text-muted">{x.place[lang]}</span>
+                </div>
+                <p class="mt-1 font-serif text-xl text-orange italic md:text-2xl">{x.role[lang]}</p>
+                <p class="mt-4 max-w-xl text-[15px] leading-relaxed text-bone/65">{x.summary[lang]}</p>
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <!-- Educación en móvil -->
+    <div class="md:hidden">
+      <p class="mono-label mb-4 text-muted">{t.education}</p>
+      <ul class="space-y-4">
+        {
+          education.map((e) => (
+            <li class="border-l-2 border-blue pl-4">
+              <p class="font-semibold">{e.title[lang]}</p>
+              <p class="text-sm text-muted">
+                {e.school} · {e.years}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,150 @@
+---
+// Placeholder diseñado para los proyectos sin imagen.
+// Dibuja un dispositivo (web / móvil / design system) con UI esqueleto en los colores de marca.
+import type { Project } from '../data/projects';
+import LogoMark from './LogoMark.astro';
+
+interface Props {
+  project: Project;
+  label: string;
+}
+const { project, label } = Astro.props;
+const accent = project.accent === 'orange' ? 'bg-orange' : 'bg-blue';
+const accentText = project.accent === 'orange' ? 'text-orange' : 'text-blue-light';
+const glow =
+  project.accent === 'orange'
+    ? 'radial-gradient(60% 60% at 70% 80%, rgb(253 98 31 / 0.35), transparent 70%)'
+    : 'radial-gradient(60% 60% at 70% 80%, rgb(40 87 201 / 0.45), transparent 70%)';
+---
+
+<div class="grain absolute inset-0 overflow-hidden bg-coal-2">
+  {
+    project.image ? (
+      <img
+        src={project.image}
+        alt={project.title}
+        loading="lazy"
+        class="h-full w-full object-cover transition-transform duration-[1.2s] ease-expo group-hover:scale-[1.04]"
+      />
+    ) : (
+      <>
+        <div class="grid-lines absolute inset-0 opacity-70" />
+        <div class="absolute inset-0" style={`background:${glow}`} />
+
+        {/* Marca de agua tipográfica */}
+        <p
+          aria-hidden="true"
+          class="display text-outline absolute -bottom-[0.12em] -left-[0.04em] text-[clamp(4rem,14vw,11rem)] whitespace-nowrap text-white/[0.09] uppercase"
+        >
+          {project.title.split(' ')[0]}
+        </p>
+
+        <div class="absolute top-4 right-4 left-4 flex items-center justify-between mono-label text-bone/50 md:top-5 md:right-5 md:left-5">
+          <span class="flex items-center gap-2">
+            <LogoMark class={`h-2.5 w-auto ${accentText}`} />
+            {label}
+          </span>
+          <span>{project.year}</span>
+        </div>
+
+        <div class="pv-device absolute inset-0 transition-transform duration-[1.2s] ease-expo group-hover:-translate-y-2 group-hover:scale-[1.03]">
+          {project.kind === 'web' && (
+            <div class="absolute top-[18%] left-1/2 w-[78%] -translate-x-1/2 overflow-hidden rounded-xl border border-white/10 bg-ink shadow-2xl shadow-black/60">
+              <div class="flex items-center gap-1.5 border-b border-white/10 px-3 py-2">
+                <span class="h-2 w-2 rounded-full bg-white/20" />
+                <span class="h-2 w-2 rounded-full bg-white/20" />
+                <span class="h-2 w-2 rounded-full bg-white/20" />
+                <span class="ml-3 h-3 w-1/3 rounded-full bg-white/[0.06]" />
+              </div>
+              <div class="flex aspect-[16/9]">
+                <div class="w-[20%] space-y-2 border-r border-white/10 p-3">
+                  <span class={`block h-2.5 w-3/4 rounded-full ${accent}`} />
+                  <span class="block h-2 w-full rounded-full bg-white/10" />
+                  <span class="block h-2 w-5/6 rounded-full bg-white/10" />
+                  <span class="block h-2 w-2/3 rounded-full bg-white/10" />
+                  <span class="block h-2 w-4/5 rounded-full bg-white/10" />
+                </div>
+                <div class="flex flex-1 flex-col gap-3 p-3 md:p-4">
+                  <div class="flex items-center justify-between">
+                    <span class="h-3 w-1/3 rounded-full bg-white/20" />
+                    <span class="h-5 w-14 rounded-full bg-white/10" />
+                  </div>
+                  <div class="grid grid-cols-3 gap-2">
+                    <span class={`h-10 rounded-lg ${accent} opacity-90 md:h-14`} />
+                    <span class="h-10 rounded-lg bg-white/[0.07] md:h-14" />
+                    <span class="h-10 rounded-lg bg-white/[0.07] md:h-14" />
+                  </div>
+                  <div class="flex flex-1 items-end gap-1.5 rounded-lg bg-white/[0.04] p-2">
+                    {[40, 65, 50, 80, 55, 90, 70, 60, 85, 45, 75, 95].map((h, i) => (
+                      <span
+                        class:list={['flex-1 rounded-sm', i === 11 ? accent : 'bg-white/15']}
+                        style={`height:${h}%`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {project.kind === 'mobile' && (
+            <>
+              <div class="absolute top-[22%] left-[58%] w-[24%] rotate-[8deg] opacity-50">
+                <div class="aspect-[9/19] rounded-[1.6rem] border-[3px] border-coal bg-ink p-2">
+                  <span class={`block h-1/3 rounded-xl ${accent} opacity-60`} />
+                </div>
+              </div>
+              <div class="absolute top-[12%] left-1/2 w-[28%] -translate-x-1/2 shadow-2xl shadow-black/60">
+                <div class="aspect-[9/19] overflow-hidden rounded-[1.8rem] border-[3px] border-coal bg-ink p-2.5">
+                  <span class="mx-auto mb-3 block h-1.5 w-1/3 rounded-full bg-coal" />
+                  <span class="mb-2 block h-2.5 w-1/2 rounded-full bg-white/25" />
+                  <span class="mb-3 block h-2 w-3/4 rounded-full bg-white/10" />
+                  <span class={`mb-3 block aspect-[4/3] rounded-xl ${accent}`} />
+                  {[0, 1, 2].map(() => (
+                    <span class="mb-2 flex items-center gap-2">
+                      <span class="h-6 w-6 shrink-0 rounded-lg bg-white/10" />
+                      <span class="flex-1 space-y-1">
+                        <span class="block h-1.5 w-full rounded-full bg-white/15" />
+                        <span class="block h-1.5 w-2/3 rounded-full bg-white/[0.07]" />
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {project.kind === 'system' && (
+            <div class="absolute top-[17%] left-1/2 grid w-[80%] -translate-x-1/2 grid-cols-6 gap-2 md:gap-3">
+              <div class="col-span-2 row-span-2 flex flex-col justify-between rounded-xl border border-white/10 bg-ink p-3">
+                <span class="mono-label text-bone/40">Type</span>
+                <span class="font-sans text-[clamp(2rem,5vw,4rem)] leading-none font-bold tracking-tight">Aa</span>
+              </div>
+              <span class="aspect-square rounded-xl bg-orange" />
+              <span class="aspect-square rounded-xl bg-blue" />
+              <span class="aspect-square rounded-xl bg-coal" />
+              <span class="aspect-square rounded-xl bg-bone" />
+              <div class="col-span-4 flex items-center gap-2 rounded-xl border border-white/10 bg-ink p-3">
+                <span class={`h-6 flex-1 rounded-full ${accent}`} />
+                <span class="h-6 flex-1 rounded-full border border-white/20" />
+                <span class={`relative h-5 w-9 shrink-0 rounded-full ${accent}`}>
+                  <span class="absolute top-0.5 right-0.5 h-4 w-4 rounded-full bg-bone" />
+                </span>
+              </div>
+              <div class="col-span-3 space-y-1.5 rounded-xl border border-white/10 bg-ink p-3">
+                <span class="block h-2 w-1/2 rounded-full bg-white/25" />
+                <span class="block h-6 rounded-md border border-white/15" />
+                <span class="block h-2 w-1/3 rounded-full bg-white/10" />
+              </div>
+              <div class="col-span-3 flex flex-wrap content-start gap-1.5 rounded-xl border border-white/10 bg-ink p-3">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <span class:list={['h-4 rounded-full', n === 1 ? accent : 'bg-white/10', n % 2 ? 'w-10' : 'w-7']} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </>
+    )
+  }
+</div>

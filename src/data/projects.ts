@@ -49,6 +49,7 @@ export const projects: Project[] = [
     url: 'https://www.behance.net/gallery/201528415/Portal-Conectmonos-Eficacia',
     featured: true,
     featuredOrder: 3,
+    image: '/projects/eficacia.webp'
   },
   {
     slug: 'amica-design-system',
@@ -66,6 +67,7 @@ export const projects: Project[] = [
     tags: ['Design System', 'Components', 'Guidelines'],
     featured: true,
     featuredOrder: 1,
+    image: '/projects/amica.webp'
   },
   {
     slug: 'jazz-blue-apron',
@@ -98,6 +100,7 @@ export const projects: Project[] = [
     },
     tags: ['Mobile', 'Product Design', 'UX Research'],
     url: 'https://www.behance.net/gallery/185666373/MUNCHMATCH-Food-recomendation-App',
+    image:'/projects/munchmatch.webp'
   },
   {
     slug: 'enerwave',
@@ -131,6 +134,7 @@ export const projects: Project[] = [
     },
     tags: ['Mobile', 'UX/UI', 'Prototyping'],
     url: 'https://www.behance.net/gallery/172652027/Jardin-Plaza-Mobile-UXUI-Project',
+    image: '/projects/jardin-plaza.webp'
   },
   {
     slug: 'subway-mupi',

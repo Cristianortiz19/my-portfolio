@@ -22,6 +22,7 @@ export interface Project {
   url?: string; // link externo (Behance, sitio en vivo…)
   status?: 'nda' | 'soon'; // si no hay link
   featured?: boolean;
+  featuredOrder?: number; // orden en el home (menor = primero)
   image?: string;
 }
 
@@ -47,6 +48,8 @@ export const projects: Project[] = [
     tags: ['UX/UI', 'Information Architecture', 'Component Library'],
     url: 'https://www.behance.net/gallery/201528415/Portal-Conectmonos-Eficacia',
     featured: true,
+    featuredOrder: 3,
+    image: '/projects/eficacia.webp',
   },
   {
     slug: 'amica-design-system',
@@ -63,6 +66,25 @@ export const projects: Project[] = [
     tags: ['Design System', 'Components', 'Guidelines'],
     status: 'nda',
     featured: true,
+    featuredOrder: 1,
+    image: '/projects/amica.webp',
+  },
+  {
+    slug: 'jazz-blue-apron',
+    title: 'Jazz — Design System for Blue Apron',
+    client: 'Blue Apron',
+    year: 2025,
+    kind: 'system',
+    accent: 'blue',
+    role: { en: 'Design System Designer', es: 'Diseñador de Sistemas de Diseño' },
+    description: {
+      en: 'A design system for Blue Apron that unifies component look and functionality, streamlining development with a clear framework for accessible, intuitive design — 29 prototyped components, 94 variants and 42 colors.',
+      es: 'Un sistema de diseño para Blue Apron que unifica la apariencia y funcionalidad de los componentes, agilizando el desarrollo con un marco claro para un diseño accesible e intuitivo — 29 componentes prototipados, 94 variantes y 42 colores.',
+    },
+    tags: ['Design System', 'Component Library', 'Accessibility'],
+    featured: true,
+    featuredOrder: 2,
+    image: '/projects/jazz-blue-apron.webp',
   },
   {
     slug: 'munchmatch',
@@ -77,22 +99,24 @@ export const projects: Project[] = [
     },
     tags: ['Mobile', 'Product Design', 'UX Research'],
     url: 'https://www.behance.net/gallery/185666373/MUNCHMATCH-Food-recomendation-App',
-    featured: true,
   },
   {
     slug: 'enerwave',
     title: 'Enerwave',
+    client: 'enerBit · Universidad ICESI',
     year: 2023,
     kind: 'web',
     accent: 'blue',
-    role: { en: 'UI/UX Designer', es: 'Diseñador UI/UX' },
+    role: { en: 'UX/UI Designer & Front-end', es: 'Diseñador UX/UI & Front-end' },
     description: {
-      en: "A web application that brings everything its users need into one platform, so they don't have to add yet another tool to their routine.",
-      es: 'Una aplicación web que reúne todo lo que sus usuarios necesitan en una sola plataforma, para que no tengan que sumar otra herramienta a su rutina.',
+      en: 'A web app that gives enerBit employees integrated support in one platform: learning paths, a personalized dashboard, a centralized library and continuous feedback, with no extra tools to add.',
+      es: 'Una aplicación web que le da a los colaboradores de enerBit un soporte integrado en una sola plataforma: rutas de aprendizaje, un panel personalizado, una biblioteca centralizada y retroalimentación continua, sin herramientas adicionales.',
     },
-    tags: ['Web App', 'UI Design', 'Dashboard'],
+    tags: ['UX Research', 'UI Design', 'Front-end', 'Dashboard'],
     url: 'https://www.behance.net/gallery/185603759/Enerwave',
     featured: true,
+    featuredOrder: 4,
+    image: '/projects/enerwave.webp',
   },
   {
     slug: 'jardin-plaza',
@@ -126,4 +150,6 @@ export const projects: Project[] = [
   },
 ];
 
-export const featuredProjects = projects.filter((p) => p.featured);
+export const featuredProjects = projects
+  .filter((p) => p.featured)
+  .sort((a, b) => (a.featuredOrder ?? 99) - (b.featuredOrder ?? 99));
